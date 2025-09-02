@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>NapCatDev✨</title>
@@ -24,7 +24,7 @@
     }
 
     .typewriter {
-      white-space: normal;
+      white-space: pre-wrap;
       word-break: break-word;
       max-width: 90vw;
       position: relative;
@@ -99,42 +99,20 @@
 
     let currentMessage = 0;
     let currentChar = 0;
-    let isDeleting = false;
-    let isTyping = false;
     const typewriter = document.getElementById("typewriter");
 
     function typeLoop() {
-      if (isTyping) return;
-      isTyping = true;
       const message = messages[currentMessage];
-
-      function step() {
-        if (isDeleting) {
-          currentChar--;
-          typewriter.textContent = message.substring(0, currentChar);
-          if (currentChar === 0) {
-            isDeleting = false;
-            currentMessage = (currentMessage + 1) % messages.length;
-            setTimeout(() => {
-              isTyping = false;
-              typeLoop();
-            }, 500);
-          } else {
-            setTimeout(step, 50);
-          }
-        } else {
-          currentChar++;
-          typewriter.textContent = message.substring(0, currentChar);
-          if (currentChar === message.length) {
-            isDeleting = true;
-            setTimeout(step, 1000);
-          } else {
-            setTimeout(step, 100);
-          }
-        }
+      if (currentChar < message.length) {
+        typewriter.textContent += message[currentChar];
+        currentChar++;
+        setTimeout(typeLoop, 100);
+      } else {
+        currentMessage = (currentMessage + 1) % messages.length;
+        currentChar = 0;
+        typewriter.textContent += "\n";
+        setTimeout(typeLoop, 800);
       }
-
-      step();
     }
 
     typeLoop();
